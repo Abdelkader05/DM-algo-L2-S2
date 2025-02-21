@@ -1,0 +1,11 @@
+digraph arbre {
+	node [shape=record , height=.1 ]
+	edge [tailclip=false , arrowtail = dot , dir=both];
+	n0x5593bb434380 [label="<valeur >4|<droit >"];
+	n0x5593bb434380:droit:c -> n0x5593bb434360:valeur;
+	n0x5593bb434360 [label="<valeur >3|<droit >"];
+	n0x5593bb434360:droit:c -> n0x5593bb434340:valeur;
+	n0x5593bb434340 [label="<valeur >2|<droit >"];
+	n0x5593bb434340:droit:c -> n0x5593bb434320:valeur;
+	n0x5593bb434320 [label="<valeur >1|<droit >"];
+}
