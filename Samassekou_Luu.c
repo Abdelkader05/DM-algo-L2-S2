@@ -188,7 +188,7 @@ int construit_filiforme_aleatoire(int h, Arbre * a, int graine){
 int insere_niveau(Arbre a, int niv, Liste * lst) {
     if ( !a ) return 1;
 
-    if ( niv == 0) {//cellule liste
+    if ( niv == 0) {
         Cellule * tmp_cellule = alloue_cellule(a);
         if ( !tmp_cellule) return 0;
         insere_en_tete(lst, tmp_cellule);
@@ -210,14 +210,14 @@ int hauteur(Arbre abr){
 int parcours_largeur_naif(Arbre a, Liste * lst) {
     int h = hauteur(a); 
     int r = 1;
-    for (int i = 0; i <= h; i++) r = insere_niveau(a, i, lst);
+    for (int i = 0; i <= h && r; i++) r = insere_niveau(a, i, lst);
     return r;
 }
 
 int insere_niveau_V2(Arbre a, int niv, Liste * lst, int * nb_visite) {
     if ( !a ) return 1;
     *nb_visite += 1;
-    if ( niv == 0) {//cellule liste
+    if ( niv == 0) {
         Cellule * tmp_cellule = alloue_cellule(a);
         if ( !tmp_cellule) return 0;
         insere_en_tete(lst, tmp_cellule);
@@ -233,7 +233,7 @@ int insere_niveau_V2(Arbre a, int niv, Liste * lst, int * nb_visite) {
 int parcours_largeur_naif_V2(Arbre a, Liste * lst, int * nb_visite) {
     int h = hauteur(a); 
     int r = 1;
-    for (int i = 0; i <= h; i++) r = insere_niveau_V2(a, i, lst, nb_visite);
+    for (int i = 0; i <= h && r; i++) r = insere_niveau_V2(a, i, lst, nb_visite);
     return r;
 }
 

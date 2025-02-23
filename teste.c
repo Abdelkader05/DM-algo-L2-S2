@@ -130,100 +130,6 @@ int defiler(File f, Noeud ** sortant){
 }
 
 
-
-
-
-/*-----------------------------------------------------------------------------------------------------------------------------*/
-/* Inspiration du tp*/
-void ajout(Arbre *a, int n){
-    if ( !(*a)) *a = alloue_noeud(n, NULL, NULL);
-    else {
-        if ( (*a)->valeur > n) return ajout(&((*a)->fg), n);
-        if ( (*a)->valeur < n) return ajout(&((*a)->fd), n);
-    }
-}
-
-void ecrireDebut(FILE *f) {
-    fprintf(f, "digraph arbre {\n");
-    fprintf(f, "\tnode [shape=record , height=.1 ]\n");
-    fprintf(f, "\tedge [tailclip=false , arrowtail = dot , dir=both];\n");
-}
-
-void ecrireArbre(FILE *f, Arbre a)
-{
-    if (!a)
-        return;
-    // [label="<gauche >|<valeur >6|<droit >"];
-    fprintf(f, "\tn%p [label=\"<gauche >|<valeur >%d|<droit >\"];\n", a, a->valeur);
-
-    if (a->fd)
-    {
-        fprintf(f, "\tn%p:droit:c -> n%p:valeur;\n", a, a->fd);
-        ecrireArbre(f, a->fd);
-    }
-    if (a->fg)
-    {
-        fprintf(f, "\tn%p:gauche:c -> n%p:valeur;\n", a, a->fg);
-        ecrireArbre(f, a->fg);
-    }
-}
-
-void ecrireFin(FILE *f) {
-    /*
-    qui écrit la dernière ligne du fichier *f, c’est-à-dire qu’elle
-    ferme l’accolade.
-    */
-    fprintf(f, "}\n");
-}
-
-void dessine(FILE *f, Arbre a) {
-    ecrireDebut(f);
-    ecrireArbre(f, a);
-    ecrireFin(f);
-}
-
-void creePDF(char *dot, char *pdf, Arbre a) {
-    FILE *out = fopen(dot, "w");
-    dessine(out, a);
-    fclose(out);
-    int len = strlen(dot) + strlen(pdf) + 15;
-    char *cmd = malloc(len);
-    snprintf(cmd, len, "dot -Tpdf %s -o %s", dot, pdf);
-    system(cmd);
-    free(cmd);
-}
-
-void ecrireliste(FILE *f, Liste lst) {
-    if (!lst)
-        return;
-    // [label="<gauche >|<valeur >6|<droit >"];
-    fprintf(f, "\tn%p [label=\"<valeur >%d|<droit >\"];\n", lst, lst->noeud->valeur);
-
-    if (lst->suivant)
-    {
-        fprintf(f, "\tn%p:droit:c -> n%p:valeur;\n", lst, lst->suivant);
-        ecrireliste(f, lst->suivant);
-    }
-}
-
-void dessine_liste(FILE *f, Liste lst) {
-    ecrireDebut(f);
-    ecrireliste(f, lst);
-    ecrireFin(f);
-}
-void creePDF_liste(char *dot, char *pdf, Liste lst)
-{
-    FILE *out = fopen(dot, "w");
-    dessine_liste(out, lst);
-    fclose(out);
-    int len = strlen(dot) + strlen(pdf) + 15;
-    char *cmd = malloc(len);
-    snprintf(cmd, len, "dot -Tpdf %s -o %s", dot, pdf);
-    system(cmd);
-    free(cmd);
-}
-/*-----------------------------------------------------------------------------------------------------------------------------*/
-
 void free_arbre(Arbre *a){
     if (! (*a)) return;
     free_arbre(&((*a)->fd));
@@ -282,7 +188,7 @@ int construit_filiforme_aleatoire(int h, Arbre * a, int graine){
 int insere_niveau(Arbre a, int niv, Liste * lst) {
     if ( !a ) return 1;
 
-    if ( niv == 0) {//cellule liste
+    if ( niv == 0) {
         Cellule * tmp_cellule = alloue_cellule(a);
         if ( !tmp_cellule) return 0;
         insere_en_tete(lst, tmp_cellule);
@@ -304,14 +210,14 @@ int hauteur(Arbre abr){
 int parcours_largeur_naif(Arbre a, Liste * lst) {
     int h = hauteur(a); 
     int r = 1;
-    for (int i = 0; i <= h; i++) r = insere_niveau(a, i, lst);
+    for (int i = 0; i <= h && r; i++) r = insere_niveau(a, i, lst);
     return r;
 }
 
 int insere_niveau_V2(Arbre a, int niv, Liste * lst, int * nb_visite) {
     if ( !a ) return 1;
     *nb_visite += 1;
-    if ( niv == 0) {//cellule liste
+    if ( niv == 0) {
         Cellule * tmp_cellule = alloue_cellule(a);
         if ( !tmp_cellule) return 0;
         insere_en_tete(lst, tmp_cellule);
@@ -327,7 +233,7 @@ int insere_niveau_V2(Arbre a, int niv, Liste * lst, int * nb_visite) {
 int parcours_largeur_naif_V2(Arbre a, Liste * lst, int * nb_visite) {
     int h = hauteur(a); 
     int r = 1;
-    for (int i = 0; i <= h; i++) r = insere_niveau_V2(a, i, lst, nb_visite);
+    for (int i = 0; i <= h && r; i++) r = insere_niveau_V2(a, i, lst, nb_visite);
     return r;
 }
 
